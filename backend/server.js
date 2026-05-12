@@ -24,7 +24,7 @@ const io = new Server(server, {
 // Make io available globally
 global.io = io;
 
-app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // Routes

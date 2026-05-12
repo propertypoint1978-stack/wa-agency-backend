@@ -37,7 +37,7 @@ app.use('/api/whatsapp', whatsappRoutes);
 app.get('/', (req, res) => {
   res.json({ status: 'WhatsApp AI Agency Backend Running ✅' });
 });
-
+ 
 // Socket.IO connection
 io.on('connection', (socket) => {
   console.log('Dashboard connected:', socket.id);

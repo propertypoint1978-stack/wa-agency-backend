@@ -19,12 +19,11 @@ const io = new Server(server, {
 
 global.io = io;
 
-// Manual CORS headers
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  if (req.method === 'OPTIONS') { res.sendStatus(200); return; }
   next();
 });
 
@@ -36,23 +35,23 @@ app.use('/api/leads', leadRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
 
 app.get('/', (req, res) => {
-  res.json({ status: 'WhatsApp AI Agency Backend Running ✅' });
+  res.json({ status: 'WhatsApp AI Agency Backend Running' });
 });
 
 io.on('connection', (socket) => {
-  console.log('Dashboard connected:', socket.id);
-  socket.on('disconnect', () => console.log('Dashboard disconnected:', socket.id));
+  console.log('Connected:', socket.id);
+  socket.on('disconnect', () => console.log('Disconnected:', socket.id));
 });
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(async () => {
-    console.log('✅ MongoDB Connected');
+    console.log('MongoDB Connected');
     await initWhatsAppSessions();
     server.listen(process.env.PORT || 5000, () => {
-      console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);
+      console.log('Server running on port', process.env.PORT || 5000);
     });
   })
   .catch(err => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error('MongoDB error:', err);
     process.exit(1);
   });
